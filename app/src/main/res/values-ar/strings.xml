@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Weather</string>
+    <string name="title_home">الرئيسية</string>
+    <string name="title_favorites">المفضلة</string>
+    <string name="title_alarm">المنبه</string>
+    <string name="title_setting">الاعدادات</string>
+</resources>
