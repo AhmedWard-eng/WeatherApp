@@ -7,4 +7,15 @@
     <string name="celsius" translatable="false">°C</string>
     <string name="fahrenheit" translatable="false">°F</string>
     <string name="kelvin" translatable="false">°K</string>
+    <string name="sunset">Sunset:</string>
+    <string name="sunrise">Sunrise:</string>
+    <string name="degree" translatable="false">°</string>
+    <string name="hourly">Hourly</string>
+    <string name="weekly">Weekly</string>
+    <string name="pressure">Pressure</string>
+    <string name="humidity">Humidity</string>
+    <string name="wind">Wind</string>
+    <string name="cloud">Cloud</string>
+    <string name="ultraviolet">Ultraviolet</string>
+    <string name="visibility">Visibility</string>
 </resources>

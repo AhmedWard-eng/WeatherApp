@@ -5,4 +5,14 @@
     <string name="title_favorites">المفضلة</string>
     <string name="title_alarm">المنبه</string>
     <string name="title_setting">الاعدادات</string>
+    <string name="sunset">الغروب</string>
+    <string name="sunrise">الشروق</string>
+    <string name="hourly">اليوم</string>
+    <string name="weekly">هذا الاسبوع</string>
+    <string name="pressure">الضغط</string>
+    <string name="humidity">الرطوبة</string>
+    <string name="wind">الرياح</string>
+    <string name="cloud">نسبة الغيوم</string>
+    <string name="ultraviolet">الأشعة فوق البنفسجية</string>
+    <string name="visibility">مدى الرؤية</string>
 </resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="weather_text_view_style">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:fontFamily">@font/cairo_bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="toggleStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">@color/custom_color_selector</item>
+    </style>
+
+    <style name="weather_label_style">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:textColor">@color/textColorAAOpacity</item>
+        <item name="android:fontFamily">@font/cairo_bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+</resources>

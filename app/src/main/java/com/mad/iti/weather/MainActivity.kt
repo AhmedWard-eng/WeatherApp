@@ -5,15 +5,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.mad.iti.weather.databinding.ActivityMainBinding
 import com.mad.iti.weather.location.LocationManager
@@ -29,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     )
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var locationManager: LocationManager
+//    private lateinit var locationManager: LocationManager
     private lateinit var factory: MainViewModel.Factory
     private lateinit var mainViewModel: MainViewModel
 
@@ -39,7 +36,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        factory = MainViewModel.Factory(_repo = OneCallRepo.getInstance(APIClient))
+        factory = MainViewModel.Factory(
+            _repo = OneCallRepo.getInstance(APIClient),
+            _loc = LocationManager(this))
         mainViewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
 
 
@@ -48,7 +47,11 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         val navController = navHostFragment.navController
 
-        locationManager = LocationManager(this)
+        mainViewModel.location.observe(this){location->
+            mainViewModel.getWeather("${location.latitude}", "${location.longitude}")
+        }
+
+//        locationManager = LocationManager(this)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
 //        val appBarConfiguration = AppBarConfiguration(
@@ -77,11 +80,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun getLastLocation() {
 
-        if (locationManager.isLocationEnabled()) {
-            locationManager.requestLocation { location ->
-                mainViewModel.getWeather("${location.latitude}", "${location.longitude}")
-                locationManager.removeLocationUpdate()
-            }
+        if (mainViewModel.isLocationEnabled()) {
+            mainViewModel.requestLocationUpdate()
         } else {
             Toast.makeText(this, "please turn on location", Toast.LENGTH_SHORT).show()
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
