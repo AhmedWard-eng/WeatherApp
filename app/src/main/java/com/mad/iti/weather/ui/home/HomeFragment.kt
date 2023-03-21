@@ -5,15 +5,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.mad.iti.weather.MainViewModel
 import com.mad.iti.weather.databinding.FragmentHomeBinding
 import com.mad.iti.weather.db.getDatabase
+import com.mad.iti.weather.model.Current
 import com.mad.iti.weather.model.OneCallRepo
 import com.mad.iti.weather.network.APIClient
 import com.mad.iti.weather.networkUtils.APIStatus
@@ -36,12 +36,16 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
+        MutableLiveData<Current>().observe(viewLifecycleOwner){
+
+        }
+
         val factory = HomeViewModel.Factory(_repo = OneCallRepo.getInstance(APIClient))
         val homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val textView: TextView = binding.textHome
+//        val textView: TextView = binding.textHome
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 homeViewModel.weather.collectLatest { status ->
@@ -58,7 +62,7 @@ class HomeFragment : Fragment() {
                             }
                         }
                         else -> {
-                            Log.d(TAG, (status as APIStatus.Failure).throwable)
+                            Log.e(TAG, (status as APIStatus.Failure).throwable)
                         }
                     }
                 }
