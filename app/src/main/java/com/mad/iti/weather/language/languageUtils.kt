@@ -7,6 +7,7 @@ fun changeLanguageLocaleTo(lan: String) {
     val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(lan)
     // Call this on the main thread as it may require Activity.restart()
     AppCompatDelegate.setApplicationLocales(appLocale)
+//    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 }
 
 fun getLanguageLocale(): String {

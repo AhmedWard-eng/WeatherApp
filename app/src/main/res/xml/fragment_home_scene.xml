@@ -34,10 +34,10 @@
 
 
         </KeyFrameSet>
-        <OnSwipe
-            app:dragDirection="dragRight"
-            app:touchAnchorId="@id/sun"
-            motion:touchAnchorSide="right" />
+<!--        <OnSwipe-->
+<!--            app:dragDirection="dragRight"-->
+<!--            app:touchAnchorId="@id/sun"-->
+<!--            motion:touchAnchorSide="right" />-->
     </Transition>
 
 

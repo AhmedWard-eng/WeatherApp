@@ -1,8 +1,6 @@
 package com.mad.iti.weather.model
 
-import com.mad.iti.weather.networkUtils.APIStatus
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharedFlow
+import com.mad.iti.weather.utils.networkUtils.APIStatus
 import kotlinx.coroutines.flow.StateFlow
 
 interface OneCallRepoInterface {

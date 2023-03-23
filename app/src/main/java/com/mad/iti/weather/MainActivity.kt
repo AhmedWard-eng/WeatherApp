@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -13,9 +14,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.mad.iti.weather.databinding.ActivityMainBinding
-import com.mad.iti.weather.location.LocationManager
+import com.mad.iti.weather.language.changeLanguageLocaleTo
+import com.mad.iti.weather.language.getLanguageLocale
+import com.mad.iti.weather.location.WeatherLocationManager
 import com.mad.iti.weather.model.OneCallRepo
 import com.mad.iti.weather.network.APIClient
+import java.util.*
 
 private const val TAG = "MainActivity"
 private const val MY_LOCATION_PERMISSION_ID = 5005
@@ -26,7 +30,6 @@ class MainActivity : AppCompatActivity() {
     )
 
     private lateinit var binding: ActivityMainBinding
-//    private lateinit var locationManager: LocationManager
     private lateinit var factory: MainViewModel.Factory
     private lateinit var mainViewModel: MainViewModel
 
@@ -38,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         factory = MainViewModel.Factory(
             _repo = OneCallRepo.getInstance(APIClient),
-            _loc = LocationManager(this))
+            _loc = WeatherLocationManager.getInstance(application))
         mainViewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
 
 
@@ -51,7 +54,11 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.getWeather("${location.latitude}", "${location.longitude}")
         }
 
-//        locationManager = LocationManager(this)
+        if(getLanguageLocale().isBlank()){
+            changeLanguageLocaleTo(Locale.getDefault().language)
+        }
+
+        Log.d(TAG, "onCreate: ${getLanguageLocale()}")
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
 //        val appBarConfiguration = AppBarConfiguration(
@@ -66,20 +73,25 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
 
+
+
 //        Log.d(TAG, "onCreate: ${AppCompatDelegate.getApplicationLocales().toLanguageTags()}")
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         if (checkPermission()) {
+            Log.d(TAG, "onResume: ")
             getLastLocation()
         } else {
             ActivityCompat.requestPermissions(this, locationPermissions, MY_LOCATION_PERMISSION_ID)
         }
     }
 
-    private fun getLastLocation() {
 
+
+    private fun getLastLocation() {
+        Log.d(TAG, "getLastLocation: ")
         if (mainViewModel.isLocationEnabled()) {
             mainViewModel.requestLocationUpdate()
         } else {
@@ -97,5 +109,16 @@ class MainActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED
         ) return false
         return true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == MY_LOCATION_PERMISSION_ID) {
+            if (grantResults.isNotEmpty() &&grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLastLocation()
+            }
+        }
     }
 }

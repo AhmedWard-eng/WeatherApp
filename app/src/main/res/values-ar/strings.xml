@@ -12,7 +12,14 @@
     <string name="pressure">الضغط</string>
     <string name="humidity">الرطوبة</string>
     <string name="wind">الرياح</string>
-    <string name="cloud">نسبة الغيوم</string>
-    <string name="ultraviolet">الأشعة فوق البنفسجية</string>
+    <string name="cloud">نسبةالغيوم</string>
+    <string name="ultraviolet">مؤشرUV</string>
     <string name="visibility">مدى الرؤية</string>
+    <string name="sunday">الأحد</string>
+    <string name="monday">الأثنين</string>
+    <string name="tuesday">الثلاثاء</string>
+    <string name="wednesday">الأربع</string>
+    <string name="thursday">الخميس</string>
+    <string name="friday">الجمعة</string>
+    <string name="saturday">السبت</string>
 </resources>

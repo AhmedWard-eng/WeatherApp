@@ -2,7 +2,7 @@ package com.mad.iti.weather.model
 
 import android.util.Log
 import com.mad.iti.weather.network.APIClientInterface
-import com.mad.iti.weather.networkUtils.APIStatus
+import com.mad.iti.weather.utils.networkUtils.APIStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -32,8 +32,9 @@ class OneCallRepo private constructor(private val apiClient: APIClientInterface)
             it.printStackTrace()
             _weatherFlow.emit(APIStatus.Failure(it.message ?: "Network Call Error"))
         }
-
     }
+
+
 
     companion object {
         private lateinit var instance: OneCallRepo
