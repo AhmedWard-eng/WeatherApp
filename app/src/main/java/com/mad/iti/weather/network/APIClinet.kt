@@ -1,6 +1,6 @@
 package com.mad.iti.weather.network
 
-import com.mad.iti.weather.model.OneCallWeatherResponse
+import com.mad.iti.weather.model.weather.OneCallWeatherResponse
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

@@ -1,7 +1,6 @@
-package com.mad.iti.weather.networkUtils
+package com.mad.iti.weather.utils.networkUtils
 
-import com.mad.iti.weather.model.OneCallWeatherResponse
-import com.mad.iti.weather.network.ApiService
+import com.mad.iti.weather.model.weather.OneCallWeatherResponse
 
 sealed class APIStatus {
     class Success(var oneCallWeatherResponse: OneCallWeatherResponse) : APIStatus()

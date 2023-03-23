@@ -1,4 +1,4 @@
-package com.mad.iti.weather.model
+package com.mad.iti.weather.model.weather
 
 data class Daily(
     val clouds: Int,
@@ -11,6 +11,8 @@ data class Daily(
     val moonset: Int,
     val pop: Double,
     val pressure: Int,
+    val rain: Double,
+    val snow: Double,
     val sunrise: Int,
     val sunset: Int,
     val temp: Temp,
@@ -18,5 +20,6 @@ data class Daily(
     val weather: List<Weather>,
     val wind_deg: Int,
     val wind_gust: Double,
-    val wind_speed: Double
-)
+    val wind_speed: Double,
+
+    )

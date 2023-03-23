@@ -15,7 +15,7 @@
             android:id="@+id/toggleGroup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             app:checkedButton="@id/buttonHourly"
             app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
@@ -39,10 +39,10 @@
                 app:layout_constraintEnd_toStartOf="@+id/buttonDaily"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/barrier2"
-                 />
+                app:layout_constraintTop_toBottomOf="@id/barrier2" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonDaily"
                 style="@style/toggleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -57,65 +57,82 @@
                 app:layout_constraintStart_toEndOf="@+id/buttonHourly"
                 app:layout_constraintTop_toBottomOf="@id/barrier2"
                 app:layout_constraintTop_toTopOf="@+id/buttonHourly"
-                app:layout_constraintVertical_bias="0.0"
-                />
+                app:layout_constraintVertical_bias="0.0" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
 
         <TextView
             android:id="@+id/txtViewLocation"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="32dp"
             android:fontFamily="@font/cairo_bold"
-            tools:text="Cairo"
+            android:gravity="center"
             android:textColor="@color/textColor"
-            android:textSize="48sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="24sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Cairo" />
 
         <ImageView
             android:id="@+id/imageViewWeatherIcon"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginTop="24dp"
             android:src="@drawable/d024x"
+
             app:layout_constraintEnd_toStartOf="@+id/txtViewTemperatureDegree"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
             app:layout_constraintTop_toBottomOf="@+id/txtViewLocation" />
 
         <TextView
             android:id="@+id/txtViewWeatherCondition"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="@font/cairo_light"
-            tools:text="Cloudy"
+            android:gravity="center"
             android:textColor="@color/textColor"
             android:textSize="40sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/imageViewWeatherIcon"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/imageViewWeatherIcon"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewWeatherIcon" />
+            app:layout_constraintBottom_toTopOf="@id/barrier2"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewWeatherIcon"
+            tools:text="Cloudy" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/background"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@id/barrier2" />
 
 
         <TextView
             android:id="@+id/txtViewTemperatureDegree"
             android:layout_width="wrap_content"
-            android:layout_height="149dp"
-            android:layout_marginStart="24dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:fontFamily="@font/cairo_light"
-            tools:text="16"
+            android:gravity="center"
             android:textColor="@color/textColor"
-            android:textSize="96sp"
+            android:textSize="48sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/txtViewWeatherCondition"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewWeatherIcon"
             app:layout_constraintEnd_toStartOf="@+id/txtViewDegreeSymbol"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/imageViewWeatherIcon"
-            app:layout_constraintTop_toBottomOf="@+id/txtViewLocation" />
+            app:layout_constraintTop_toTopOf="@+id/imageViewWeatherIcon"
+            tools:text="16" />
 
         <TextView
             android:id="@+id/txtViewDegreeSymbol"
@@ -166,13 +183,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:fontFamily="@font/cairo_light"
-                    tools:text="19:39"
                     android:textColor="@color/textColor"
                     android:textSize="32sp"
                     app:layout_constraintBaseline_toBottomOf="@id/txtViewSunriseTime"
                     app:layout_constraintEnd_toStartOf="@id/labelSunset"
                     app:layout_constraintStart_toEndOf="@id/txtViewSunriseTime"
-                    app:layout_constraintTop_toTopOf="@id/parent" />
+                    app:layout_constraintTop_toTopOf="@id/parent"
+                    tools:text="19:39" />
 
                 <ImageView
                     android:id="@+id/sun"
@@ -189,12 +206,12 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
                     android:fontFamily="@font/cairo_light"
-                    tools:text="18:06"
                     android:textColor="@color/textColor"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="18:06" />
 
                 <TextView
                     android:id="@+id/txtViewSunriseTime"
@@ -202,7 +219,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:fontFamily="@font/cairo_light"
-                    tools:text="6:01"
                     android:textColor="@color/textColor"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -210,7 +226,8 @@
                     app:layout_constraintEnd_toStartOf="@+id/labelSunset"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="spread_inside"
-                    app:layout_constraintStart_toEndOf="@+id/labelSunrise" />
+                    app:layout_constraintStart_toEndOf="@+id/labelSunrise"
+                    tools:text="6:01" />
 
                 <TextView
                     android:id="@+id/labelSunset"
@@ -250,6 +267,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginTop="32dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
@@ -281,25 +299,25 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/txtViewWin"
+                    android:id="@+id/txtViewWind"
                     style="@style/weather_text_view_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    tools:text="TextView"
                     app:layout_constraintEnd_toEndOf="@+id/imageView"
                     app:layout_constraintStart_toStartOf="@+id/imageView"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                    app:layout_constraintTop_toBottomOf="@+id/imageView"
+                    tools:text="TextView" />
 
                 <TextView
                     android:id="@+id/txtViewPressure"
                     style="@style/weather_text_view_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="1000 hpa"
                     app:layout_constraintEnd_toEndOf="@+id/imageView3"
                     app:layout_constraintStart_toStartOf="@+id/imageView3"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+                    app:layout_constraintTop_toBottomOf="@+id/imageView3"
+                    tools:text="1000 hpa" />
 
                 <TextView
                     android:id="@+id/txtViewHumidity"
@@ -307,10 +325,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    tools:text="77%"
                     app:layout_constraintEnd_toEndOf="@+id/imageView2"
                     app:layout_constraintStart_toStartOf="@+id/imageView2"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+                    app:layout_constraintTop_toBottomOf="@+id/imageView2"
+                    tools:text="77%" />
 
                 <TextView
                     android:id="@+id/textView4"
@@ -329,10 +347,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    tools:text="TextView"
                     app:layout_constraintEnd_toEndOf="@+id/imageView4"
                     app:layout_constraintStart_toStartOf="@+id/imageView4"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+                    app:layout_constraintTop_toBottomOf="@+id/imageView4"
+                    tools:text="TextView" />
 
                 <TextView
                     android:id="@+id/textView6"
@@ -352,9 +370,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@string/wind"
-                    app:layout_constraintEnd_toEndOf="@+id/txtViewWin"
-                    app:layout_constraintStart_toStartOf="@+id/txtViewWin"
-                    app:layout_constraintTop_toBottomOf="@+id/txtViewWin" />
+                    app:layout_constraintEnd_toEndOf="@+id/txtViewWind"
+                    app:layout_constraintStart_toStartOf="@+id/txtViewWind"
+                    app:layout_constraintTop_toBottomOf="@+id/txtViewWind" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline"
@@ -453,10 +471,10 @@
                     style="@style/weather_text_view_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="TextView"
                     app:layout_constraintEnd_toEndOf="@+id/imageView5"
                     app:layout_constraintStart_toStartOf="@+id/imageView5"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+                    app:layout_constraintTop_toBottomOf="@+id/imageView5"
+                    tools:text="TextView" />
 
                 <TextView
                     android:id="@+id/textView10"
@@ -477,10 +495,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    tools:text="TextView"
                     app:layout_constraintEnd_toEndOf="@+id/imageView6"
                     app:layout_constraintStart_toStartOf="@+id/imageView6"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+                    app:layout_constraintTop_toBottomOf="@+id/imageView6"
+                    tools:text="TextView" />
 
                 <TextView
                     android:id="@+id/textView12"
@@ -504,14 +522,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="8dp" />
+            app:layout_constraintGuide_begin="16dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_end="8dp" />
+            app:layout_constraintGuide_end="16dp" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

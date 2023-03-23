@@ -3,6 +3,7 @@ package com.mad.iti.weather.db
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.mad.iti.weather.model.*
+import com.mad.iti.weather.model.weather.*
 
 
 class WeatherTypeConverter {
@@ -38,6 +39,15 @@ class WeatherTypeConverter {
     @TypeConverter
     fun fromStringToListWeather(value: String): List<Weather> =
         Gson().fromJson(value, Array<Weather>::class.java).toList()
+
+
+    @TypeConverter
+    fun fromListAlertToString(alertItems:  List<Alert>): String = Gson().toJson(alertItems)
+    @TypeConverter
+    fun fromStringToListAlert(value: String): List<Alert> =
+        Gson().fromJson(value, Array<Alert>::class.java).toList()
+
+
 
     @TypeConverter
     fun fromFeelsLikeToString(feelsLike: FeelsLike): String = Gson().toJson(feelsLike)

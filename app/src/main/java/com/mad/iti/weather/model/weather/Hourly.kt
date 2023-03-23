@@ -1,4 +1,4 @@
-package com.mad.iti.weather.model
+package com.mad.iti.weather.model.weather
 
 data class Hourly(
     val clouds: Int,
@@ -8,6 +8,8 @@ data class Hourly(
     val humidity: Int,
     val pop: Double,
     val pressure: Int,
+    val rain: Rain,
+    val snow: Snow,
     val temp: Double,
     val uvi: Double,
     val visibility: Int,

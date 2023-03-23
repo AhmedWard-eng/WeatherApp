@@ -1,4 +1,4 @@
-package com.mad.iti.weather.model
+package com.mad.iti.weather.model.weather
 
 data class Temp(
     val day: Double,

@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.mad.iti.weather.model.OneCallWeatherResponse
+import com.mad.iti.weather.model.weather.OneCallWeatherResponse
 
 @Database(entities = [OneCallWeatherResponse::class], version = 1, exportSchema = false)
 @TypeConverters(WeatherTypeConverter::class)
