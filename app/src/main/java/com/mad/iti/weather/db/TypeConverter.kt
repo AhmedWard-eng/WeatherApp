@@ -42,7 +42,7 @@ class WeatherTypeConverter {
 
 
     @TypeConverter
-    fun fromListAlertToString(alertItems:  List<Alert>): String = Gson().toJson(alertItems)
+    fun fromListAlertToString(alertItems:  List<Alert>?): String = Gson().toJson(alertItems)
     @TypeConverter
     fun fromStringToListAlert(value: String): List<Alert> =
         Gson().fromJson(value, Array<Alert>::class.java).toList()
