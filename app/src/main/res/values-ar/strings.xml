@@ -5,6 +5,9 @@
     <string name="title_favorites">المفضلة</string>
     <string name="title_alarm">المنبه</string>
     <string name="title_setting">الاعدادات</string>
+    <string name="celsius">سيليزيوس</string>
+    <string name="fahrenheit">فهرنهايت</string>
+    <string name="kelvin">كيلفين</string>
     <string name="sunset">الغروب</string>
     <string name="sunrise">الشروق</string>
     <string name="hourly">اليوم</string>
@@ -22,4 +25,26 @@
     <string name="thursday">الخميس</string>
     <string name="friday">الجمعة</string>
     <string name="saturday">السبت</string>
+    <string name="today">اليوم</string>
+    <string name="now">الأن</string>
+    <string name="meter_per_second">" م/ث"</string>
+    <string name="mile_per_hour">" ميل/س"</string>
+    <string name="arabic">العربية</string>
+    <string name="english">الانجليزية</string>
+    <string name="gps">موقعي الحالي</string>
+    <string name="map">الخريطة</string>
+    <string name="notification">الاشعارات</string>
+    <string name="language">اللغة</string>
+    <string name="location">الموقع</string>
+    <string name="temperature">الحرارة</string>
+    <string name="wind_speed">سرعة الرياح</string>
+    <string name="m">" م"</string>
+    <string name="hpa">" ه.ب.ا"</string>
+    <string name="no_favorites_yet">لا يوجد اماكن مفضلة حتى الأن</string>
+    <string name="save_location_to_fav">حفظ الي المفضلة</string>
+    <string name="internet_connection_is_lost">لا يوجد اتصال بالانترنت</string>
+    <string name="network_is_restored">تم استعادة الاتصال بالانترنت</string>
+    <string name="refresh">اعادة التحميل</string>
+    <string name="no_internet_connection">لا يوجد اتصال بالانترنت</string>
+    <string name="check_your_connection">قم باختبار اتصالك بالانترنت ثم اعد تحميل الصفحة</string>
 </resources>

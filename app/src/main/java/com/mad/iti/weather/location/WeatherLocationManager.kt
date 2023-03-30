@@ -14,10 +14,11 @@ import java.util.*
 
 private const val TAG = "WeatherLocationManager"
 
-class WeatherLocationManager private constructor(private var application: Application) {
+class WeatherLocationManager private constructor(private var application : Application) :
+    WeatherLocationManagerInterface {
 
     private val _location = MutableStateFlow<LocationStatus>(LocationStatus.Loading)
-    val location = _location.asStateFlow()
+    override val location = _location.asStateFlow()
 
     private lateinit var locationCallback: LocationCallback
     private val mFusedLocationProviderClient: FusedLocationProviderClient by lazy {
@@ -30,14 +31,15 @@ class WeatherLocationManager private constructor(private var application: Applic
     }
 
     @SuppressLint("MissingPermission")
-    fun requestLocation() {
+    override fun requestLocation() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
                 p0.lastLocation?.let {
                   val isEmitted = _location.tryEmit(LocationStatus.Success(it))
-                    Log.d(TAG, "onLocationResult: $isEmitted")
+                  Log.d(TAG, "onLocationResult: $isEmitted")
                 }
+                removeLocationUpdate()
             }
         }
         mFusedLocationProviderClient.requestLocationUpdates(
@@ -45,7 +47,7 @@ class WeatherLocationManager private constructor(private var application: Applic
         )
     }
 
-    fun removeLocationUpdate() {
+    override fun removeLocationUpdate() {
         if (::locationCallback.isInitialized) {
             mFusedLocationProviderClient.removeLocationUpdates(
                 locationCallback
@@ -54,7 +56,7 @@ class WeatherLocationManager private constructor(private var application: Applic
     }
 
 
-    fun isLocationEnabled(): Boolean {
+    override fun isLocationEnabled(): Boolean {
         val weatherLocationManager: LocationManager =
             application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return weatherLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)

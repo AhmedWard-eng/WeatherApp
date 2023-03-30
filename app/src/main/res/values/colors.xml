@@ -12,4 +12,8 @@
     <color name="textColorAAOpacity">#8829465B</color>
     <color name="pressedButton">#2C5D87</color>
     <color name="normalButton">#DBE9F5</color>
+
+    <color name="customUnchecked">#88DBE9F5</color>
+
+    <color name="customChecked">#DBE9F5</color>
 </resources>

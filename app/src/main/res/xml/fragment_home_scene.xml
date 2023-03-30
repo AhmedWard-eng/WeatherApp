@@ -60,7 +60,13 @@
             app:layout_constraintEnd_toStartOf="@id/labelSunset"
             app:layout_constraintStart_toEndOf="@id/txtViewSunriseTime"
             app:layout_constraintTop_toTopOf="parent" />
-<!--        <Constraint-->
+        <Constraint
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_editor_absoluteX="163dp"
+            android:id="@+id/textView_no_network"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewNoInternet" />
+        <!--        <Constraint-->
 <!--            android:id="@+id/view"-->
 <!--            android:layout_height="2dp"-->
 <!--            android:layout_marginBottom="4dp"-->

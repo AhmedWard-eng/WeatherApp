@@ -4,9 +4,9 @@
     <string name="title_favorites">Favorites</string>
     <string name="title_alarm">Alarm</string>
     <string name="title_setting">Setting</string>
-    <string name="celsius" translatable="false">°C</string>
-    <string name="fahrenheit" translatable="false">°F</string>
-    <string name="kelvin" translatable="false">°K</string>
+    <string name="celsius">Celsius</string>
+    <string name="fahrenheit">Fahrenheit</string>
+    <string name="kelvin">Kelvin</string>
     <string name="sunset">Sunset:</string>
     <string name="sunrise">Sunrise:</string>
     <string name="degree" translatable="false">°</string>
@@ -25,4 +25,29 @@
     <string name="thursday">Thursday</string>
     <string name="friday">Friday</string>
     <string name="saturday">Saturday</string>
+    <string name="today">Today</string>
+    <string name="now">Now</string>
+    <string name="meter_per_second">" m/s"</string>
+    <string name="mile_per_hour">" mph"</string>
+    <string name="arabic">Arabic</string>
+    <string name="english">English</string>
+    <string name="gps">GPS</string>
+    <string name="map">Map</string>
+    <string name="notification">Notification</string>
+    <string name="language">Language</string>
+    <string name="location">Location</string>
+    <string name="temperature">Temperature</string>
+    <string name="wind_speed">Wind speed</string>
+    <string name="m">" m"</string>
+    <string name="hpa">" hPa"</string>
+    <string name="c_symbol" translatable="false"><sup>°C</sup></string>
+    <string name="k_symbol" translatable="false"><sup>°K</sup></string>
+    <string name="f_symbol" translatable="false"><sup>°F</sup></string>
+    <string name="no_favorites_yet">No favorites places yet</string>
+    <string name="save_location_to_fav">Save location to favorite</string>
+    <string name="internet_connection_is_lost">Internet Connection is lost</string>
+    <string name="network_is_restored">Network is Restored</string>
+    <string name="refresh">Refresh</string>
+    <string name="no_internet_connection">No Internet connection</string>
+    <string name="check_your_connection">Check your connection, then refresh the page.</string>
 </resources>

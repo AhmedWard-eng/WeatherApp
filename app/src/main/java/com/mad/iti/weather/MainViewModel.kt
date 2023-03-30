@@ -5,11 +5,11 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.mad.iti.weather.location.WeatherLocationManager
 import com.mad.iti.weather.utils.locationUtils.LocationStatus
-import com.mad.iti.weather.model.OneCallRepoInterface
+import com.mad.iti.weather.model.WeatherDataRepoInterface
 import kotlinx.coroutines.launch
 
 private const val TAG = "HomeFragment"
-class MainViewModel(private val _repo: OneCallRepoInterface,private val _locManager : WeatherLocationManager) : ViewModel() {
+class MainViewModel(private val _repo: WeatherDataRepoInterface, private val _locManager : WeatherLocationManager) : ViewModel() {
 
     private val _location = MutableLiveData<Location>()
     val location :LiveData<Location> get() = _location
@@ -39,7 +39,7 @@ class MainViewModel(private val _repo: OneCallRepoInterface,private val _locMana
     }
 
     @Suppress("UNCHECKED_CAST")
-    class Factory(private val _repo: OneCallRepoInterface, private val _loc: WeatherLocationManager) : ViewModelProvider.Factory {
+    class Factory(private val _repo: WeatherDataRepoInterface, private val _loc: WeatherLocationManager) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
                 MainViewModel(_repo,_loc) as T

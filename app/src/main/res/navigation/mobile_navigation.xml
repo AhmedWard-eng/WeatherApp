@@ -15,7 +15,12 @@
         android:id="@+id/navigation_favorites"
         android:name="com.mad.iti.weather.ui.favorite.FavoriteFragment"
         android:label="@string/title_favorites"
-        tools:layout="@layout/fragment_favorite" />
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_navigation_favorites_to_showFavDetailsFragment"
+            app:destination="@id/showFavDetailsFragment"
+            app:popUpTo="@id/navigation_favorites" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_alarm"
@@ -27,4 +32,13 @@
         android:name="com.mad.iti.weather.ui.setting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
+    <fragment
+        android:id="@+id/showFavDetailsFragment"
+        android:name="com.mad.iti.weather.ui.favorite.ShowFavDetailsFragment"
+        android:label="fragment_show_fav_details"
+        tools:layout="@layout/fragment_show_fav_details" >
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
 </navigation>
