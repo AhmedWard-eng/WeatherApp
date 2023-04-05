@@ -13,6 +13,9 @@
     <color name="pressedButton">#2C5D87</color>
     <color name="normalButton">#DBE9F5</color>
 
+
+    <color name="backgroundWithOpacity">#A0DBE9F5</color>
+
     <color name="customUnchecked">#88DBE9F5</color>
 
     <color name="customChecked">#DBE9F5</color>

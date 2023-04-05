@@ -11,6 +11,7 @@
     <color name="textColor">#DBE9F5</color>
     <color name="textColorAAOpacity">#88DBE9F5</color>
 
+    <color name="backgroundWithOpacity">#A0222C3B</color>
 
     <color name="customUnchecked">#88DBE9F5</color>
 

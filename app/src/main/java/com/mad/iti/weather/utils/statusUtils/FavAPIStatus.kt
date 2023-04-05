@@ -1,10 +1,10 @@
 package com.mad.iti.weather.utils.statusUtils
 
-import com.mad.iti.weather.model.entities.FavWeatherData
+import com.mad.iti.weather.model.entities.FavWeatherEntity
 
 
 sealed class FavAPIStatus {
-    class Success(var favWeatherData: FavWeatherData) : FavAPIStatus()
+    class Success(var favWeatherEntity: FavWeatherEntity) : FavAPIStatus()
 
     class Failure(var throwable: String) : FavAPIStatus()
 

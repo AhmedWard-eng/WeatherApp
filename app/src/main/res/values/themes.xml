@@ -12,6 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">#AFC6D9</item>
 
+        <item name="android:windowDisablePreview">true</item>
         <!-- Customize your theme here. -->
 
 

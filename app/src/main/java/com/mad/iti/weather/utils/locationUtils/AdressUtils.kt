@@ -7,7 +7,6 @@ import android.location.Location
 import android.os.Build
 import java.util.*
 
-private const val TAG = "AdressUtils"
 fun formatAddressToCity(address: Address?): String {
     return address?.let {
         if (it.subAdminArea != null) {
@@ -53,7 +52,13 @@ fun getAddress(context: Context, long: Double,lat:Double, locale: Locale, onResu
             onResult(address)
         }
     } else {
-        address = geocoder.getFromLocation(lat, long, 1)?.get(0)
-        onResult(address)
+        val addressList = geocoder.getFromLocation(lat, long, 1)
+        if(!addressList.isNullOrEmpty()){
+            address = geocoder.getFromLocation(lat, long, 1)?.get(0)
+            onResult(address)
+        }else{
+            onResult(null)
+        }
+
     }
 }

@@ -54,16 +54,6 @@
                 app:layout_constraintStart_toStartOf="@+id/guideline5"
                 app:layout_constraintTop_toBottomOf="@id/radioGroupTempDegree" />
 
-            <View
-                android:id="@+id/view4"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/textColor"
-                app:layout_constraintEnd_toStartOf="@+id/guideline6"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/guideline5"
-                app:layout_constraintTop_toBottomOf="@id/radioGroupWindSpeed" />
             <RadioGroup
                 android:id="@+id/radioGroupTempDegree"
                 android:layout_width="0dp"
@@ -114,6 +104,8 @@
                 android:layout_height="wrap_content"
                 android:checkedButton="@+id/radio_button_1"
                 android:gravity="center"
+                android:layout_marginBottom="24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline6"
                 app:layout_constraintStart_toStartOf="@+id/guideline5"
                 app:layout_constraintTop_toBottomOf="@+id/textView5">
@@ -273,24 +265,6 @@
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="@+id/guideline5"
                 app:layout_constraintTop_toBottomOf="@+id/view3" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/materialSwitchNotification"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="@font/cairo_bold"
-                android:text="@string/notification"
-                android:textColor="@color/textColor"
-                android:textSize="24sp"
-                android:checked="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/guideline6"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@id/guideline5"
-                app:layout_constraintTop_toBottomOf="@+id/view4" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

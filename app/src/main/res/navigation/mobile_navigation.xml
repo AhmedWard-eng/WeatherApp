@@ -24,9 +24,9 @@
 
     <fragment
         android:id="@+id/navigation_alarm"
-        android:name="com.mad.iti.weather.ui.alarm.AlarmFragment"
+        android:name="com.mad.iti.weather.ui.alert.AlertFragment"
         android:label="@string/title_alarm"
-        tools:layout="@layout/fragment_alarm" />
+        tools:layout="@layout/fragment_alert" />
     <fragment
         android:id="@+id/navigation_setting"
         android:name="com.mad.iti.weather.ui.setting.SettingFragment"

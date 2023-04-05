@@ -1,38 +1,37 @@
 package com.mad.iti.weather.ui.favorite
 
 import androidx.lifecycle.*
-import com.mad.iti.weather.model.FavWeatherRepoInterface
-import com.mad.iti.weather.model.entities.FavWeatherData
-import kotlinx.coroutines.Dispatchers
+import com.mad.iti.weather.model.FavAlertsWeatherRepoInterface
+import com.mad.iti.weather.model.entities.FavWeatherEntity
 import kotlinx.coroutines.launch
 
 class FavViewModel(
-    private val favWeatherRepo: FavWeatherRepoInterface
+    private val favWeatherRepo: FavAlertsWeatherRepoInterface
 ) : ViewModel() {
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             favWeatherRepo.getWeatherFavData()
         }
     }
 
     val favWeatherData = favWeatherRepo.favWeatherListFlow
 
-    fun deleteItemFromFav(favWeatherData: FavWeatherData) {
-        viewModelScope.launch(Dispatchers.IO) {
-            favWeatherRepo.removeWeatherFromFav(favWeatherData)
+    fun deleteItemFromFav(favWeatherEntity: FavWeatherEntity) {
+        viewModelScope.launch{
+            favWeatherRepo.removeWeatherFromFav(favWeatherEntity)
         }
     }
 
-    fun updateWeatherFavInfo(favWeatherData: FavWeatherData) {
-        viewModelScope.launch(Dispatchers.IO) {
-            favWeatherRepo.updateWeatherFavInfo(favWeatherData)
+    fun updateWeatherFavInfo(favWeatherEntity: FavWeatherEntity) {
+        viewModelScope.launch{
+            favWeatherRepo.updateWeatherFavInfo(favWeatherEntity)
         }
     }
 
     @Suppress("UNCHECKED_CAST")
     class Factory(
-        private val favWeatherRepo: FavWeatherRepoInterface
+        private val favWeatherRepo: FavAlertsWeatherRepoInterface
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(FavViewModel::class.java)) {

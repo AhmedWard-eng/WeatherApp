@@ -1,5 +1,7 @@
 package com.mad.iti.weather.network
 
+import android.util.Log
+import com.mad.iti.weather.language.getLanguageLocale
 import com.mad.iti.weather.model.weather.OneCallWeatherResponse
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -16,7 +18,8 @@ val apiService: ApiService by lazy {
 
 object APIClient : APIClientInterface{
     override suspend fun getWeather(lat: String, lon: String): Response<OneCallWeatherResponse> {
-        return apiService.getWeather(lat = lat, lon = lon)
+        Log.d("TAG", "getWeather: ${getLanguageLocale()}")
+        return apiService.getWeather(lat = lat, lon = lon, getLanguageLocale())
     }
 }
 

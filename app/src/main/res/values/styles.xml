@@ -35,6 +35,11 @@
         <item name="colorOnContainer">@color/background</item>
     </style>
 
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/textColor</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
 
 
 </resources>

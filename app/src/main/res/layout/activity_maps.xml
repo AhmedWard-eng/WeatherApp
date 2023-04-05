@@ -3,27 +3,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
+
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MapsActivity"
-        tools:layout="@layout/fragment_alarm"/>
+        tools:layout="@layout/dialog_title" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonSave"
+        android:id="@+id/buttonSaveToFav"
         android:layout_width="wrap_content"
-        android:paddingHorizontal="64dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
-        android:text="@string/save_location_to_fav"
-        android:fontFamily="@font/cairo_bold"
-        android:textSize="24sp"
+        android:layout_marginBottom="32dp"
         android:backgroundTint="@color/background"
+        android:fontFamily="@font/cairo_bold"
+        android:paddingHorizontal="64dp"
+        android:text="@string/save_location_to_fav"
         android:textColor="@color/textColor"
-        android:visibility="gone"
-        android:layout_marginBottom="32dp"/>
+        android:textSize="20sp"
+        android:visibility="gone" />
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/map_title_back_ground"
+        android:fontFamily="@font/cairo_bold"
+        android:gravity="center"
+        android:paddingVertical="16dp"
+        android:visibility="visible"
+        android:text="@string/choose_your_current_location"
+        android:textColor="@color/textColor"
+        android:textSize="20sp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSaveAsMainLoc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="@color/background"
+        android:fontFamily="@font/cairo_bold"
+        android:paddingHorizontal="64dp"
+        android:text="@string/save_location"
+        android:textColor="@color/textColor"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSaveAlarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="@color/background"
+        android:fontFamily="@font/cairo_bold"
+        android:paddingHorizontal="64dp"
+        android:text="@string/save_location"
+        android:textColor="@color/textColor"
+        android:textSize="20sp"
+        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -32,15 +77,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:indeterminate="true"
-        android:visibility="gone"
+        android:indeterminateTint="@color/textColor"
         android:indeterminateTintMode="src_atop"
-        android:indeterminateTint="@color/textColor"/>
+        android:visibility="gone" />
 
 
     <!--    <fragment android:id="@+id/autocomplete_fragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="top|center_horizontal"-->
-<!--        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
-<!--        />-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="top|center_horizontal"-->
+    <!--        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
+    <!--        />-->
 </FrameLayout>

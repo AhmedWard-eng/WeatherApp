@@ -64,3 +64,9 @@ fun getDayFormat(timeInMilliSecond: Long,timeZone :TimeZone): Int{
     }
 }
 
+fun getADateFormat(timeInMilliSecond: Long):String{
+    val pattern = "dd MMMM"
+    val simpleDateFormat = SimpleDateFormat(pattern, Locale(getLanguageLocale()))
+    return simpleDateFormat.format(Date(timeInMilliSecond))
+}
+

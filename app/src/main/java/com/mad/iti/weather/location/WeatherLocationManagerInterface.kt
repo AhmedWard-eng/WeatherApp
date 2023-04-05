@@ -8,7 +8,8 @@ interface WeatherLocationManagerInterface {
     val location: StateFlow<LocationStatus>
 
     @SuppressLint("MissingPermission")
-    fun requestLocation()
+    fun requestLocationByGPS()
     fun removeLocationUpdate()
     fun isLocationEnabled(): Boolean
+    fun requestLocationSavedFromMap()
 }

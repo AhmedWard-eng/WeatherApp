@@ -5,14 +5,13 @@ import android.content.Context
 import android.widget.TextView
 import com.mad.iti.weather.R
 import com.mad.iti.weather.sharedPreferences.SettingSharedPreferences
+import com.mad.iti.weather.utils.getADateFormat
 import com.mad.iti.weather.utils.getDayFormat
 import com.mad.iti.weather.utils.getTimeFormat
 import java.util.TimeZone
 import kotlin.math.roundToInt
 
-fun TextView.setTime(timeInSecond: Int) {
-    text = getTimeFormat(timeInSecond * 1000L)
-}
+
 fun TextView.setTime(timeInSecond: Int,timeZone: TimeZone) {
     text = getTimeFormat(timeInSecond * 1000L,timeZone)
 }
@@ -20,9 +19,7 @@ fun TextView.setTime(timeInMilliSecond: Long) {
     text = getTimeFormat(timeInMilliSecond)
 }
 
-fun TextView.setDay(timeInSecond: Int) {
-    setText(getDayFormat(timeInSecond * 1000L))
-}
+
 fun TextView.setDay(timeInSecond: Int,timeZone: TimeZone) {
     setText(getDayFormat(timeInSecond * 1000L,timeZone))
 }
@@ -74,5 +71,9 @@ fun TextView.setTemp(temp: Int, context: Context) {
         append(" ")
         append(symbol)
     }
+}
+
+fun TextView.setDate(timeInMilliSecond: Long){
+    text = getADateFormat(timeInMilliSecond)
 }
 
