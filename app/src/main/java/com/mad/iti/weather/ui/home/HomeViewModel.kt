@@ -2,6 +2,7 @@ package com.mad.iti.weather.ui.home
 
 
 import androidx.lifecycle.*
+import com.google.android.gms.maps.model.LatLng
 import com.mad.iti.weather.location.WeatherLocationManagerInterface
 import com.mad.iti.weather.model.WeatherDataRepoInterface
 import com.mad.iti.weather.utils.statusUtils.APIStatus
@@ -33,8 +34,9 @@ class HomeViewModel(
     fun isLocationEnabled(): Boolean{
         return _weatherLocationManager.isLocationEnabled()
     }
-    fun requestLocation(){
-        _weatherLocationManager.requestLocationByGPS()
+
+    fun requestLocation(callBack: (LatLng) ->Unit){
+        _weatherLocationManager.requestLocationByGPS(callBack)
     }
 
     @Suppress("UNCHECKED_CAST")

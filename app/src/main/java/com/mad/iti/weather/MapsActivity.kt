@@ -27,7 +27,6 @@ import com.mad.iti.weather.db.DefaultLocalDataSource
 import com.mad.iti.weather.db.getDatabase
 import com.mad.iti.weather.location.WeatherLocationManager
 import com.mad.iti.weather.model.FavAlertsWeatherRepo
-import com.mad.iti.weather.model.WeatherDataRepo
 import com.mad.iti.weather.network.APIClient
 import com.mad.iti.weather.sharedPreferences.SettingSharedPreferences
 import com.mad.iti.weather.sharedPreferences.SettingSharedPreferences.Companion.ADD_T0_ALERTS_IN_THIS_LOCATION
@@ -208,8 +207,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                 ), 10.0f
                             )
                         )
-                        Log.d(TAG, "moveCameraToMyLocation: ")
-                        viewModel.removeLocationUpdate()
                     }
                 }
             }

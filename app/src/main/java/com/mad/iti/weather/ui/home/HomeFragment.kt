@@ -72,16 +72,12 @@ class HomeFragment : Fragment() {
         NetworkConnectivity.getInstance(requireActivity().application)
     }
 
-    private lateinit var locationPermissions : Array<String>
-
-
+    private lateinit var locationPermissions: Array<String>
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-
-
 
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -112,19 +108,7 @@ class HomeFragment : Fragment() {
         noInternetSnackbar.setActionTextColor(requireContext().getColor(R.color.background))
         binding.buttonRefresh.setOnClickListener {
             if (networkConnectivity.isOnline()) {
-                val locStatus = homeViewModel.location.value
-                if (locStatus is LocationStatus.Success) {
-                    if (networkConnectivity.isOnline()) {
-                        binding.NoInternet.visibility = GONE
-                        binding.internet.visibility = VISIBLE
-                        homeViewModel.getWeather(
-                            locStatus.latLng.latitude, locStatus.latLng.longitude
-                        )
-                    } else {
-                        binding.internet.visibility = GONE
-                        binding.NoInternet.visibility = VISIBLE
-                    }
-                }
+                refresh()
             } else {
                 noInternetSnackbar.show()
             }
@@ -139,16 +123,19 @@ class HomeFragment : Fragment() {
                     when (status) {
                         is APIStatus.Loading -> {
                             if (networkConnectivity.isOnline()) {
+                                Log.d(TAG, "status: Loading ")
                                 binding.internet.visibility = GONE
                                 binding.NoInternet.visibility = GONE
+                                binding.askForPermission.visibility = GONE
                                 binding.progressBarLoading.visibility = VISIBLE
                             }
                         }
                         is APIStatus.Success -> {
                             binding.progressBarLoading.visibility = GONE
                             binding.NoInternet.visibility = GONE
+                            binding.askForPermission.visibility = GONE
                             binding.internet.visibility = VISIBLE
-                            Log.d(TAG, "onCreateView: Success")
+                            Log.d(TAG, "status: Success")
                             setWeatherDataToTheView(status.weatherEntity)
                             getAddress(
                                 requireContext(),
@@ -165,28 +152,15 @@ class HomeFragment : Fragment() {
                         }
                         else -> {
                             if (networkConnectivity.isOnline()) {
-                                binding.askForPermission.visibility = GONE
-                                binding.NoInternet.visibility = GONE
-                                binding.internet.visibility = GONE
-                                binding.progressBarLoading.visibility = VISIBLE
-
-                                if(SettingSharedPreferences.getInstance(requireActivity().application).getLocationPref() == SettingSharedPreferences.GPS){
-                                    Log.d(TAG, "onCreateViewTT: ${
-                                        SettingSharedPreferences.getInstance(
-                                            requireActivity().application
-                                        ).getLocationPref()
-                                    }")
-                                    if(!checkPermission()){
-                                        Log.d(TAG, "onCreateViewTT: ${
-                                            checkPermission()
-                                        }")
+                                Log.d(TAG, "status: Failure IsOnline")
+                                if (checkIfTheUserChooseGPS()) {
+                                    if (!checkPermission()) {
                                         binding.askForPermission.visibility = VISIBLE
                                         binding.NoInternet.visibility = GONE
                                         binding.internet.visibility = GONE
                                         binding.progressBarLoading.visibility = GONE
                                     }
                                 }
-
                             } else {
                                 Log.d(TAG, "onCreateView: ")
                                 binding.progressBarLoading.visibility = GONE
@@ -204,10 +178,40 @@ class HomeFragment : Fragment() {
         return root
     }
 
+    private fun checkIfTheUserChooseGPS() =
+        SettingSharedPreferences.getInstance(requireActivity().application)
+            .getLocationPref() == SettingSharedPreferences.GPS
+
+
+    private fun refresh() {
+        val locStatus = homeViewModel.location.value
+        if (locStatus is LocationStatus.Success) {
+            if (networkConnectivity.isOnline()) {
+                binding.NoInternet.visibility = GONE
+                binding.internet.visibility = VISIBLE
+                homeViewModel.getWeather(
+                    locStatus.latLng.latitude, locStatus.latLng.longitude
+                )
+                binding.progressBarLoading.visibility = VISIBLE
+            } else {
+                binding.internet.visibility = GONE
+                binding.NoInternet.visibility = VISIBLE
+            }
+        }else {
+            if (!checkPermission()) {
+                binding.askForPermission.visibility = VISIBLE
+                binding.NoInternet.visibility = GONE
+                binding.internet.visibility = GONE
+                binding.progressBarLoading.visibility = GONE
+            }
+
+        }
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-       locationPermissions = arrayOf(
+        locationPermissions = arrayOf(
             Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
         )
         requestPermission =
@@ -223,8 +227,12 @@ class HomeFragment : Fragment() {
                             if (actionMap.value) {
                                 // permission granted continue the normal
                                 // workflow of app
+
                                 if (homeViewModel.isLocationEnabled()) {
-                                    homeViewModel.requestLocation()
+                                    binding.progressBarLoading.visibility = VISIBLE
+                                    homeViewModel.requestLocation {
+                                        homeViewModel.getWeather(it.latitude, it.longitude)
+                                    }
                                 } else {
                                     checkIsLocationEnabledDialog()
                                 }
@@ -244,14 +252,18 @@ class HomeFragment : Fragment() {
     }
 
 
-
     override fun onStart() {
         super.onStart()
 
         binding.buttonAllowLocation.setOnClickListener {
-            requestPermission.launch(locationPermissions)
+            if (!checkPermission()) {
+                requestPermission.launch(locationPermissions)
+            } else if (!homeViewModel.isLocationEnabled()) {
+                checkIsLocationEnabledDialog()
+            }
         }
     }
+
     private fun checkPermission(): Boolean {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
@@ -268,8 +280,10 @@ class HomeFragment : Fragment() {
             weatherEntity.current.temp.roundToInt(), context = requireActivity().application
         )
 
-        binding.textViewDate.text = getACompleteDateFormat(weatherEntity.current.dt * 1000L,
-            TimeZone.getTimeZone(weatherEntity.timezone))
+        binding.textViewDate.text = getACompleteDateFormat(
+            weatherEntity.current.dt * 1000L,
+            TimeZone.getTimeZone(weatherEntity.timezone)
+        )
 
         binding.txtViewWeatherCondition.text = weatherEntity.current.weather[0].description
         binding.txtViewPressure.text = buildString {
@@ -294,9 +308,18 @@ class HomeFragment : Fragment() {
             weatherEntity.current.wind_speed, requireActivity().application
         )
         binding.imageViewWeatherIcon.setImageFromWeatherIconId4x(weatherEntity.current.weather[0].icon)
-        binding.txtViewSunsetTime.setTime(weatherEntity.current.sunset, TimeZone.getTimeZone(weatherEntity.timezone))
-        binding.txtViewSunriseTime.setTime(weatherEntity.current.sunrise, TimeZone.getTimeZone(weatherEntity.timezone))
-        binding.txtViewCurrentTime.setTime(weatherEntity.current.dt, TimeZone.getTimeZone(weatherEntity.timezone))
+        binding.txtViewSunsetTime.setTime(
+            weatherEntity.current.sunset,
+            TimeZone.getTimeZone(weatherEntity.timezone)
+        )
+        binding.txtViewSunriseTime.setTime(
+            weatherEntity.current.sunrise,
+            TimeZone.getTimeZone(weatherEntity.timezone)
+        )
+        binding.txtViewCurrentTime.setTime(
+            weatherEntity.current.dt,
+            TimeZone.getTimeZone(weatherEntity.timezone)
+        )
         binding.motionLayout.progress = getProgress(
             weatherEntity.current.sunset, weatherEntity.current.sunrise
         )
@@ -345,6 +368,7 @@ class HomeFragment : Fragment() {
                 showSnackBarAskingHimToEnable()
             }.show()
     }
+
     private fun showSnackBarAskingHimToEnable() {
         val snackBar = Snackbar.make(
             binding.root,
@@ -356,13 +380,15 @@ class HomeFragment : Fragment() {
                 goToEnableTheLocation()
             }
             snackBar.dismiss()
-        }.setBackgroundTint(requireActivity().getColor(R.color.textColor)).setTextColor(requireActivity().getColor(R.color.background))
+        }.setBackgroundTint(requireActivity().getColor(R.color.textColor))
+            .setTextColor(requireActivity().getColor(R.color.background))
         snackBar.setActionTextColor(requireActivity().getColor(R.color.background))
         snackBar.show()
     }
 
     private fun errorWarningForNotEnablingLocation() {
-        AlertDialog.Builder(requireContext()).setTitle(getString(R.string.warning)).setCancelable(false)
+        AlertDialog.Builder(requireContext()).setTitle(getString(R.string.warning))
+            .setCancelable(false)
             .setMessage(
                 getString(R.string.Unfortunately_the_location_is_disabled)
             ).setPositiveButton(android.R.string.ok) { _, _ -> }.show()

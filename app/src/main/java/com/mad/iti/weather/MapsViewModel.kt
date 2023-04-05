@@ -29,10 +29,6 @@ class MapsViewModel(
         }
     }
 
-    fun removeLocationUpdate() {
-        _loc.removeLocationUpdate()
-    }
-
     fun saveLocationToFav(latLng: LatLng) {
         viewModelScope.launch {
             favWeatherRepo.saveWeatherIntoFav(lat = latLng.latitude, long = latLng.longitude)

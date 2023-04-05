@@ -207,7 +207,12 @@ class MainActivity : AppCompatActivity() {
         initialSetupSettingDialogBinding.buttonSave.setOnClickListener {
             if (initialSetupSettingDialogBinding.radioMap.isChecked) {
                 settingPref.setLocationPref(SettingSharedPreferences.MAP)
-                openMapToSetLocation()
+                if (networkConnectivity.isOnline()) {
+                    openMapToSetLocation()
+                } else {
+                    errorWarningForNoNetworkWithUsingMap()
+                }
+
             } else {
                 settingPref.setLocationPref(SettingSharedPreferences.GPS)
                 checkPermissionAndGetLoc()
@@ -241,8 +246,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkIsLocationEnabledDialog() {
         AlertDialog.Builder(this).setTitle(getString(R.string.location_request))
-            .setCancelable(false)
-            .setMessage(getString(R.string.please_enable_loc))
+            .setCancelable(false).setMessage(getString(R.string.please_enable_loc))
             .setPositiveButton(
                 getString(R.string.yes)
             ) { _, _ ->
@@ -264,9 +268,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showSnackBarAskingHimToEnable() {
         val snackBar = Snackbar.make(
-            binding.root,
-            getString(R.string.please_enable_loc),
-            Snackbar.LENGTH_INDEFINITE
+            binding.root, getString(R.string.please_enable_loc), Snackbar.LENGTH_INDEFINITE
         )
         snackBar.setAction(getString(R.string.enable)) {
             if (!mainViewModel.isLocationEnabled()) {
@@ -285,6 +287,18 @@ class MainActivity : AppCompatActivity() {
             .setMessage(
                 getString(R.string.Unfortunately_the_location_is_disabled)
             ).setPositiveButton(android.R.string.ok) { _, _ -> }.show()
+    }
+
+    private fun errorWarningForNoNetworkWithUsingMap() {
+        AlertDialog.Builder(this).setTitle(getString(R.string.warning)).setCancelable(false)
+            .setMessage(
+                getString(R.string.Unfortunately_no_network_connection_loc_from_map)
+            ).setPositiveButton(android.R.string.ok) { _, _ -> }
+            .setNeutralButton(R.string.gps) { _, _ ->
+                settingPref.setLocationPref(SettingSharedPreferences.GPS)
+                checkPermissionAndGetLoc()
+            }.show()
+
     }
 
 
