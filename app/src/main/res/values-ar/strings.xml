@@ -78,4 +78,5 @@
     <string name="allow">السماح</string>
     <string name="set_alarm">تعيين التنبيه</string>
     <string name="please_allow_weather_to_access_your_location">يرجى السماح لـ التطبيق بالوصول إلى موقعك لعرض الطقس</string>
+    <string name="Unfortunately_no_network_connection_loc_from_map">عذراً، لا يوجد اتصال بالشبكة، لا يمكن الحصول على الموقع من الخريطة</string>
 </resources>

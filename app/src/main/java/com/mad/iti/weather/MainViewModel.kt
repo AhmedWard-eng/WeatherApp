@@ -23,7 +23,6 @@ class MainViewModel(private val _repo: WeatherDataRepoInterface, private val _lo
             _locManager.location.collect{
                 if(it is LocationStatus.Success){
                     _location.postValue(it.latLng)
-                    _locManager.removeLocationUpdate()
                 }
             }
         }

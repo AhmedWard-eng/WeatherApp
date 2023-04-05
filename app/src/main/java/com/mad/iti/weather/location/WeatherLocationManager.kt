@@ -4,19 +4,20 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.location.LocationManager
-import android.os.Looper
 import android.util.Log
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.mad.iti.weather.sharedPreferences.SettingSharedPreferences
 import com.mad.iti.weather.utils.locationUtils.LocationStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.*
 
+
 private const val TAG = "WeatherLocationManager"
 
-class WeatherLocationManager private constructor(private var application : Application) :
+class WeatherLocationManager private constructor(private var application: Application) :
     WeatherLocationManagerInterface {
 
     private val _location = MutableStateFlow<LocationStatus>(LocationStatus.Loading)
@@ -34,32 +35,52 @@ class WeatherLocationManager private constructor(private var application : Appli
 
     @SuppressLint("MissingPermission")
     override fun requestLocationByGPS() {
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(p0: LocationResult) {
-                super.onLocationResult(p0)
-                p0.lastLocation?.let {
-                  val isEmitted = _location.tryEmit(LocationStatus.Success(LatLng(it.latitude,it.longitude)))
-                  Log.d(TAG, "onLocationResult: $isEmitted")
-                }
-                removeLocationUpdate()
-            }
+        val tokenSource = CancellationTokenSource()
+        val token = tokenSource.token
+        mFusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY,token).addOnSuccessListener {
+            val isEmitted =
+                _location.tryEmit(LocationStatus.Success(LatLng(it.latitude, it.longitude)))
+            Log.d(TAG, "onLocationResult: $isEmitted")
         }
-        mFusedLocationProviderClient.requestLocationUpdates(
-            mLocationRequest, locationCallback, Looper.myLooper()
-        )
     }
 
-    override fun requestLocationSavedFromMap(){
-        val isEmitted = _location.tryEmit(LocationStatus.Success(SettingSharedPreferences.getInstance(application).getMapPref()))
+    @SuppressLint("MissingPermission")
+    override fun requestLocationByGPS(callback: (LatLng) -> Unit) {
+//        locationCallback = object : LocationCallback() {
+//            override fun onLocationResult(p0: LocationResult) {
+//                super.onLocationResult(p0)
+//                p0.lastLocation?.let {
+//                    callback(LatLng(it.latitude, it.longitude))
+//                }
+//
+//            }
+//        }
+//        mFusedLocationProviderClient.requestLocationUpdates(
+//            mLocationRequest, locationCallback, Looper.myLooper()
+//        )
+
+        val tokenSource = CancellationTokenSource()
+        val token = tokenSource.token
+        mFusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY,token).addOnSuccessListener {
+            callback(LatLng(it.latitude, it.longitude))
+        }
+    }
+
+
+
+    override fun requestLocationSavedFromMap() {
+        val isEmitted = _location.tryEmit(
+            LocationStatus.Success(
+                SettingSharedPreferences.getInstance(application).getMapPref()
+            )
+        )
         Log.d(TAG, "onLocationResult: $isEmitted")
     }
 
-    override fun removeLocationUpdate() {
-        if (::locationCallback.isInitialized) {
-            mFusedLocationProviderClient.removeLocationUpdates(
-                locationCallback
-            )
-        }
+    override fun removeLocationUpdate(locationCallback: LocationCallback) {
+        mFusedLocationProviderClient.removeLocationUpdates(
+            locationCallback
+        )
     }
 
 
@@ -68,8 +89,6 @@ class WeatherLocationManager private constructor(private var application : Appli
             application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return weatherLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
-
-
 
 
     companion object {

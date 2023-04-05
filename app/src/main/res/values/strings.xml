@@ -81,4 +81,5 @@
     <string name="we_can_t_fetch_your_location">We can\'t fetch your location</string>
     <string name="allow">Allow</string>
     <string name="please_allow_weather_to_access_your_location">please allow Weather to access your location</string>
+    <string name="Unfortunately_no_network_connection_loc_from_map">Unfortunately no network connection so you can\'t get location from map</string>
 </resources>
