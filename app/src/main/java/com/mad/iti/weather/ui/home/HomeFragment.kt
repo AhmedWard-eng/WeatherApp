@@ -33,6 +33,7 @@ import com.mad.iti.weather.model.WeatherDataRepo
 import com.mad.iti.weather.model.entities.WeatherEntity
 import com.mad.iti.weather.network.APIClient
 import com.mad.iti.weather.sharedPreferences.SettingSharedPreferences
+import com.mad.iti.weather.utils.getACompleteDateFormat
 import com.mad.iti.weather.utils.locationUtils.LocationStatus
 import com.mad.iti.weather.utils.locationUtils.formatAddressToCity
 import com.mad.iti.weather.utils.locationUtils.getAddress
@@ -266,6 +267,9 @@ class HomeFragment : Fragment() {
         binding.txtViewTemperatureDegree.setTemp(
             weatherEntity.current.temp.roundToInt(), context = requireActivity().application
         )
+
+        binding.textViewDate.text = getACompleteDateFormat(weatherEntity.current.dt * 1000L,
+            TimeZone.getTimeZone(weatherEntity.timezone))
 
         binding.txtViewWeatherCondition.text = weatherEntity.current.weather[0].description
         binding.txtViewPressure.text = buildString {

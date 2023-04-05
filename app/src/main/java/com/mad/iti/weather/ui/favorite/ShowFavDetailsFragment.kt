@@ -20,6 +20,7 @@ import com.mad.iti.weather.model.entities.FavWeatherEntity
 import com.mad.iti.weather.network.APIClient
 import com.mad.iti.weather.ui.home.DailyAdapter
 import com.mad.iti.weather.ui.home.HourlyAdapter
+import com.mad.iti.weather.utils.getACompleteDateFormat
 import com.mad.iti.weather.utils.locationUtils.formatAddressToCity
 import com.mad.iti.weather.utils.locationUtils.getAddress
 import com.mad.iti.weather.utils.statusUtils.FavAPIStatus
@@ -124,6 +125,8 @@ class ShowFavDetailsFragment : Fragment() {
         binding.txtViewTemperatureDegree.setTemp(
             weatherData.current.temp.roundToInt(), context = requireActivity().application
         )
+
+        binding.textViewDate.text = getACompleteDateFormat(weatherData.current.dt * 1000L, TimeZone.getTimeZone(weatherData.timezone))
 
         binding.txtViewWeatherCondition.text = weatherData.current.weather[0].description
         binding.txtViewPressure.text = buildString {
