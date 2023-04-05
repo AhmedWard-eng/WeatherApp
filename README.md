@@ -1,4 +1,4 @@
 # WeatherApp
 
-## minSdk 24
-## targetSdk 33
+### minSdk 24
+### targetSdk 33
