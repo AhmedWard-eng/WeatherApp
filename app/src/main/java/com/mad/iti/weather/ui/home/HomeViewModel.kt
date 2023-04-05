@@ -2,34 +2,45 @@ package com.mad.iti.weather.ui.home
 
 
 import androidx.lifecycle.*
-import com.mad.iti.weather.location.WeatherLocationManager
+import com.mad.iti.weather.location.WeatherLocationManagerInterface
 import com.mad.iti.weather.model.WeatherDataRepoInterface
 import com.mad.iti.weather.utils.statusUtils.APIStatus
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-private const val TAG = "HomeFragment"
-
 class HomeViewModel(
     private val _repo: WeatherDataRepoInterface,
-    private val _weatherLocationManager: WeatherLocationManager
+    private val _weatherLocationManager: WeatherLocationManagerInterface
 ) : ViewModel() {
 
     val weather: StateFlow<APIStatus>
         get() = _repo.weatherFlow
     val location = _weatherLocationManager.location
 
-    fun getWeather(lat: Double, long: Double) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _repo.enqueueWeatherCall("$lat", "$long")
+
+    init {
+        viewModelScope.launch {
+            _repo.getWeatherData()
         }
+    }
+
+    fun getWeather(lat: Double, long: Double) {
+        viewModelScope.launch {
+            _repo.refreshWeatherCall("$lat", "$long")
+        }
+    }
+
+    fun isLocationEnabled(): Boolean{
+        return _weatherLocationManager.isLocationEnabled()
+    }
+    fun requestLocation(){
+        _weatherLocationManager.requestLocationByGPS()
     }
 
     @Suppress("UNCHECKED_CAST")
     class Factory(
         private val _repo: WeatherDataRepoInterface,
-        private val _weatherLocationManager: WeatherLocationManager
+        private val _weatherLocationManager: WeatherLocationManagerInterface
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {

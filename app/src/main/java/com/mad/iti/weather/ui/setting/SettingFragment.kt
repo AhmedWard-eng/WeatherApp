@@ -1,21 +1,24 @@
 package com.mad.iti.weather.ui.setting
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.mad.iti.weather.MapsActivity
 import com.mad.iti.weather.R
 import com.mad.iti.weather.databinding.FragmentSettingBinding
 import com.mad.iti.weather.language.changeLanguageLocaleTo
 import com.mad.iti.weather.language.getLanguageLocale
 import com.mad.iti.weather.sharedPreferences.SettingSharedPreferences
+import com.mad.iti.weather.sharedPreferences.SettingSharedPreferences.Companion.NAVIGATE_TO_MAP
+import com.mad.iti.weather.sharedPreferences.SettingSharedPreferences.Companion.SET_LOCATION_AS_MAIN_LOCATION
 
 class SettingFragment : Fragment() {
 
     private lateinit var binding: FragmentSettingBinding
 
-    private lateinit var viewModel: SettingViewModel
 
     private val settingSharedPreferences by lazy {
         SettingSharedPreferences.getInstance(requireActivity().application)
@@ -51,13 +54,7 @@ class SettingFragment : Fragment() {
             SettingSharedPreferences.KELVIN -> binding.radioButtonK.toggle()
             SettingSharedPreferences.FAHRENHEIT -> binding.radioButtonF.toggle()
         }
-        if (settingSharedPreferences.getNotificationPref()) {
-            if (!binding.materialSwitchNotification.isChecked)
-                binding.materialSwitchNotification.toggle()
-        }else{
-            if (binding.materialSwitchNotification.isChecked)
-                binding.materialSwitchNotification.toggle()
-        }
+
         binding.radioGroupChooseLanguage.setOnCheckedChangeListener { _, checked ->
             when (checked) {
                 R.id.radio_button_Arabic -> changeLanguageLocaleTo("ar")
@@ -66,12 +63,21 @@ class SettingFragment : Fragment() {
         }
         binding.radioGroupLocation.setOnCheckedChangeListener { _, checked ->
             when (checked) {
-                R.id.radio_button_GPS -> settingSharedPreferences.setLocationPref(
-                    SettingSharedPreferences.GPS
-                )
-                R.id.radio_button_map -> settingSharedPreferences.setLocationPref(
-                    SettingSharedPreferences.MAP
-                )
+                R.id.radio_button_GPS -> {
+                    settingSharedPreferences.setLocationPref(
+                        SettingSharedPreferences.GPS
+                    )
+                    requireActivity().recreate()
+                }
+                R.id.radio_button_map -> {
+                    settingSharedPreferences.setLocationPref(
+                        SettingSharedPreferences.MAP
+                    )
+                    with(Intent(requireContext(), MapsActivity::class.java)) {
+                        putExtra(NAVIGATE_TO_MAP, SET_LOCATION_AS_MAIN_LOCATION)
+                        startActivity(this)
+                    }
+                }
             }
         }
         binding.radioGroupWindSpeed.setOnCheckedChangeListener { _, checked ->
@@ -98,13 +104,7 @@ class SettingFragment : Fragment() {
             }
         }
 
-        binding.materialSwitchNotification.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                settingSharedPreferences.enableNotification()
-            } else {
-                settingSharedPreferences.disabledNotification()
-            }
-        }
+
     }
 
 

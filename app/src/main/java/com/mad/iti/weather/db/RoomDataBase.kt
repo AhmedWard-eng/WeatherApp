@@ -5,10 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.mad.iti.weather.model.entities.FavWeatherData
-import com.mad.iti.weather.model.entities.WeatherData
+import com.mad.iti.weather.model.entities.AlertEntity
+import com.mad.iti.weather.model.entities.FavWeatherEntity
+import com.mad.iti.weather.model.entities.WeatherEntity
 
-@Database(entities = [WeatherData::class,FavWeatherData::class], version = 1, exportSchema = false)
+@Database(entities = [WeatherEntity::class,FavWeatherEntity::class,AlertEntity::class], version = 1, exportSchema = false)
 @TypeConverters(WeatherTypeConverter::class)
 abstract class WeatherDataBase : RoomDatabase() {
     abstract val weatherDao: WeatherDao

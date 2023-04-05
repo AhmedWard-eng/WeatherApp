@@ -3,24 +3,23 @@ package com.mad.iti.weather.ui.favorite
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.mad.iti.weather.model.FavWeatherRepoInterface
-import kotlinx.coroutines.Dispatchers
+import com.mad.iti.weather.model.FavAlertsWeatherRepoInterface
 import kotlinx.coroutines.launch
 
-class ShowFavDetailsViewModel(private val _favWeatherRepo: FavWeatherRepoInterface) : ViewModel() {
+class ShowFavDetailsViewModel(private val _favWeatherRepo: FavAlertsWeatherRepoInterface) : ViewModel() {
 
 
     val weatherFlow = _favWeatherRepo.favWeatherFlow
 
     fun getWeather(id: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             _favWeatherRepo.updateFlowWithCurrentData(id)
         }
     }
 
     @Suppress("UNCHECKED_CAST")
     class Factory(
-        private val favWeatherRepo: FavWeatherRepoInterface
+        private val favWeatherRepo: FavAlertsWeatherRepoInterface
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(ShowFavDetailsViewModel::class.java)) {

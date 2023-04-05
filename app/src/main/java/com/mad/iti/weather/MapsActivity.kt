@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -20,15 +21,22 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import com.mad.iti.weather.databinding.ActivityMapsBinding
 import com.mad.iti.weather.db.DefaultLocalDataSource
 import com.mad.iti.weather.db.getDatabase
 import com.mad.iti.weather.location.WeatherLocationManager
-import com.mad.iti.weather.model.FavWeatherRepo
+import com.mad.iti.weather.model.FavAlertsWeatherRepo
 import com.mad.iti.weather.model.WeatherDataRepo
 import com.mad.iti.weather.network.APIClient
+import com.mad.iti.weather.sharedPreferences.SettingSharedPreferences
+import com.mad.iti.weather.sharedPreferences.SettingSharedPreferences.Companion.ADD_T0_ALERTS_IN_THIS_LOCATION
+import com.mad.iti.weather.sharedPreferences.SettingSharedPreferences.Companion.ADD_T0_FAV_IN_THIS_LOCATION
+import com.mad.iti.weather.sharedPreferences.SettingSharedPreferences.Companion.NAVIGATE_TO_MAP
+import com.mad.iti.weather.sharedPreferences.SettingSharedPreferences.Companion.SET_LOCATION_AS_MAIN_LOCATION
 import com.mad.iti.weather.utils.locationUtils.LocationStatus
 import com.mad.iti.weather.utils.statusUtils.AddingFavAPIStatus
+import com.mad.iti.weather.worker.ID
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -41,12 +49,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var marker: Marker? = null
     private lateinit var _latLng: LatLng
 
-    private val viewModel by viewModels<MapsViewModel>() {
+    private val getNavigationExtra by lazy {
+        intent.getStringExtra(NAVIGATE_TO_MAP)
+    }
+
+    private val getAlertId by lazy {
+        intent.getStringExtra(ID)
+    }
+
+    private val viewModel by viewModels<MapsViewModel> {
         MapsViewModel.Factory(
-            WeatherDataRepo.getInstance(
-                APIClient, DefaultLocalDataSource.getInstance(getDatabase(application).weatherDao)
-            ), WeatherLocationManager.getInstance(application), FavWeatherRepo.getInstance(
-                APIClient, DefaultLocalDataSource.getInstance(getDatabase(application).weatherDao)
+            WeatherLocationManager.getInstance(application),
+            FavAlertsWeatherRepo.getInstance(
+                APIClient,
+                DefaultLocalDataSource.getInstance(getDatabase(application).weatherDao)
             )
         )
     }
@@ -57,11 +73,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if (getNavigationExtra.equals(SET_LOCATION_AS_MAIN_LOCATION)) {
+            binding.txtTitle.text = getString(R.string.choose_your_current_location)
+        } else if (getNavigationExtra.equals(ADD_T0_FAV_IN_THIS_LOCATION)) {
+            binding.txtTitle.text = getString(R.string.choose_your_fav_loc)
+        } else {
+            binding.txtTitle.text = getString(R.string.choose_the_alert_loc)
+        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
 
+        onBackPressedDispatcher.addCallback(this) {
+            if (getNavigationExtra.equals(ADD_T0_ALERTS_IN_THIS_LOCATION) || getNavigationExtra.equals(SET_LOCATION_AS_MAIN_LOCATION) ) {
+                Snackbar.make(
+                    binding.root, getString(R.string.please_choose_loc_first), Snackbar.LENGTH_LONG
+                ).show()
+            }else{
+                finish()
+            }
 
+        }
 //        val autocompleteFragment =
 //            supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as AutocompleteSupportFragment
 //        autocompleteFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG))
@@ -78,9 +110,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 //                }
 //
 //            }
-        binding.buttonSave.setOnClickListener {
-            if (::_latLng.isInitialized)
-                viewModel.saveLocationToFav(latLng = _latLng)
+
+
+        binding.buttonSaveToFav.setOnClickListener {
+            if (::_latLng.isInitialized) viewModel.saveLocationToFav(latLng = _latLng)
             lifecycleScope.launch {
                 lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                     viewModel.isSaved.collect {
@@ -98,6 +131,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }
             }
+        }
+
+        binding.buttonSaveAlarm.setOnClickListener {
+            if (::_latLng.isInitialized) getAlertId?.let { it1 ->
+                viewModel.updateAlert(
+                    it1, lat = _latLng.latitude, long = _latLng.longitude
+                )
+            }
+            Log.d(TAG, "onCreate: lat = ${_latLng.latitude}, log = ${_latLng.longitude}")
+            finish()
+        }
+
+        binding.buttonSaveAsMainLoc.setOnClickListener {
+            if (::_latLng.isInitialized) SettingSharedPreferences.getInstance(application)
+                .setMapPref(_latLng)
+            finish()
         }
         mapFragment.getMapAsync(this)
     }
@@ -118,22 +167,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 //        val sydney = LatLng(-34.0, 151.0)
 //        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
         if (isPermissionGranted()) {
-            viewModel.requestLocation()
+            viewModel.requestLocationByGPS()
             moveCameraToMyLocation()
         }
         setMapLongClick(googleMap)
         setPoiClick(googleMap)
-        semMapCameraChanged(googleMap)
+        setMapCameraChanged(googleMap)
         enableMyLocation()
     }
 
-    private fun semMapCameraChanged(googleMap: GoogleMap) {
+    private fun setMapCameraChanged(googleMap: GoogleMap) {
         googleMap.setOnCameraMoveListener {
             googleMap.clear()
             _latLng = googleMap.cameraPosition.target
             marker = googleMap.addMarker(MarkerOptions().position(_latLng))
-            binding.buttonSave.visibility = VISIBLE
+            showTheCorrectButton()
         }
+    }
+
+    private fun showTheCorrectButton() {
+        if (getNavigationExtra.equals(SET_LOCATION_AS_MAIN_LOCATION)) {
+            binding.buttonSaveAsMainLoc.visibility = VISIBLE
+        } else if (getNavigationExtra.equals(ADD_T0_FAV_IN_THIS_LOCATION)) {
+            binding.buttonSaveToFav.visibility = VISIBLE
+        } else {
+            binding.buttonSaveAlarm.visibility = VISIBLE
+        }
+
     }
 
     private fun moveCameraToMyLocation() {
@@ -144,8 +204,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         map.moveCamera(
                             CameraUpdateFactory.newLatLngZoom(
                                 LatLng(
-                                    locationStatus.location.latitude,
-                                    locationStatus.location.longitude
+                                    locationStatus.latLng.latitude, locationStatus.latLng.longitude
                                 ), 10.0f
                             )
                         )
@@ -170,7 +229,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 )
             )
             _latLng = latLng
-            binding.buttonSave.visibility = VISIBLE
+            showTheCorrectButton()
             marker = map.addMarker(markerOptions)
 
 
@@ -186,9 +245,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             marker = map.addMarker(
                 MarkerOptions().position(poi.latLng).title(poi.name)
             )
-
             _latLng = poi.latLng
-            binding.buttonSave.visibility = VISIBLE
+            showTheCorrectButton()
             marker?.showInfoWindow()
         }
     }
@@ -227,5 +285,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
+
 
 }

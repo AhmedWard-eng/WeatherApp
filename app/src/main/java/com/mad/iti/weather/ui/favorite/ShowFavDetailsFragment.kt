@@ -15,8 +15,8 @@ import com.mad.iti.weather.databinding.FragmentShowFavDetailsBinding
 import com.mad.iti.weather.db.DefaultLocalDataSource
 import com.mad.iti.weather.db.getDatabase
 import com.mad.iti.weather.language.getLanguageLocale
-import com.mad.iti.weather.model.FavWeatherRepo
-import com.mad.iti.weather.model.entities.FavWeatherData
+import com.mad.iti.weather.model.FavAlertsWeatherRepo
+import com.mad.iti.weather.model.entities.FavWeatherEntity
 import com.mad.iti.weather.network.APIClient
 import com.mad.iti.weather.ui.home.DailyAdapter
 import com.mad.iti.weather.ui.home.HourlyAdapter
@@ -27,6 +27,7 @@ import com.mad.iti.weather.utils.viewUtils.textView.setTemp
 import com.mad.iti.weather.utils.viewUtils.textView.setTime
 import com.mad.iti.weather.utils.viewUtils.textView.setWindSpeed
 import com.mad.iti.weather.viewUtils.setImageFromWeatherIconId4x
+
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.roundToInt
@@ -42,7 +43,7 @@ class ShowFavDetailsFragment : Fragment() {
 
     private val viewModel: ShowFavDetailsViewModel by lazy {
         val factory = ShowFavDetailsViewModel.Factory(
-            FavWeatherRepo.getInstance(
+            FavAlertsWeatherRepo.getInstance(
                 APIClient,
                 DefaultLocalDataSource.getInstance(getDatabase(requireActivity().application).weatherDao)
             )
@@ -87,15 +88,15 @@ class ShowFavDetailsFragment : Fragment() {
                         }
                         is FavAPIStatus.Success -> {
                             hourlyAdapter.timeZone =
-                                TimeZone.getTimeZone(status.favWeatherData.timezone)
+                                TimeZone.getTimeZone(status.favWeatherEntity.timezone)
                             dailyAdapter.timeZone =
-                                TimeZone.getTimeZone(status.favWeatherData.timezone)
+                                TimeZone.getTimeZone(status.favWeatherEntity.timezone)
                             Log.d(TAG, "onCreateView: Success")
-                            setWeatherDataToTheView(status.favWeatherData)
+                            setWeatherDataToTheView(status.favWeatherEntity)
                             getAddress(
                                 requireContext(),
-                                lat = status.favWeatherData.lat,
-                                long = status.favWeatherData.lon,
+                                lat = status.favWeatherEntity.lat,
+                                long = status.favWeatherEntity.lon,
                                 locale = Locale(getLanguageLocale())
                             ) { address ->
                                 Log.d(
@@ -119,7 +120,7 @@ class ShowFavDetailsFragment : Fragment() {
     }
 
 
-    private fun setWeatherDataToTheView(weatherData: FavWeatherData) {
+    private fun setWeatherDataToTheView(weatherData: FavWeatherEntity) {
         binding.txtViewTemperatureDegree.setTemp(
             weatherData.current.temp.roundToInt(), context = requireActivity().application
         )

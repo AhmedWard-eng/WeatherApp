@@ -16,7 +16,4 @@ data class Current(
     val wind_deg: Int,
     val wind_gust: Double,
     val wind_speed: Double,
-
-
-
-    )
+)

@@ -5,44 +5,48 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.mad.iti.weather.location.WeatherLocationManager
-import com.mad.iti.weather.model.FavWeatherRepoInterface
-import com.mad.iti.weather.model.WeatherDataRepoInterface
-import kotlinx.coroutines.Dispatchers
+import com.mad.iti.weather.model.FavAlertsWeatherRepoInterface
 import kotlinx.coroutines.launch
 
 class MapsViewModel(
-    private val weatherDataRepo: WeatherDataRepoInterface,
     private val _loc: WeatherLocationManager,
-    private val favWeatherRepo: FavWeatherRepoInterface
+    private val favWeatherRepo: FavAlertsWeatherRepoInterface
 ) : ViewModel() {
 
     val location = _loc.location
 
     val isSaved = favWeatherRepo.favAddingWeatherFlow
 
-    fun requestLocation(){
-        _loc.requestLocation()
+//    val getItem = favWeatherRepo.
+
+    fun requestLocationByGPS() {
+        _loc.requestLocationByGPS()
     }
 
-    fun removeLocationUpdate(){
+    fun updateAlert(entryId: String, lat: Double, long: Double) {
+        viewModelScope.launch {
+            favWeatherRepo.updateAlertItemLatLongById(entryId, lat, long)
+        }
+    }
+
+    fun removeLocationUpdate() {
         _loc.removeLocationUpdate()
     }
 
-    fun saveLocationToFav(latLng: LatLng){
-        viewModelScope.launch(Dispatchers.IO) {
+    fun saveLocationToFav(latLng: LatLng) {
+        viewModelScope.launch {
             favWeatherRepo.saveWeatherIntoFav(lat = latLng.latitude, long = latLng.longitude)
         }
     }
 
     @Suppress("UNCHECKED_CAST")
     class Factory(
-        private val weatherDataRepo: WeatherDataRepoInterface,
         private val _loc: WeatherLocationManager,
-        private val favWeatherRepo: FavWeatherRepoInterface
+        private val favWeatherRepo: FavAlertsWeatherRepoInterface
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(MapsViewModel::class.java)) {
-                MapsViewModel(weatherDataRepo, _loc, favWeatherRepo) as T
+                MapsViewModel( _loc, favWeatherRepo) as T
             } else {
                 throw java.lang.IllegalArgumentException("ViewModel Class not found")
             }

@@ -44,10 +44,41 @@
     <string name="k_symbol" translatable="false"><sup>°K</sup></string>
     <string name="f_symbol" translatable="false"><sup>°F</sup></string>
     <string name="no_favorites_yet">No favorites places yet</string>
-    <string name="save_location_to_fav">Save location to favorite</string>
+    <string name="save_location_to_fav">Save to favorite</string>
     <string name="internet_connection_is_lost">Internet Connection is lost</string>
     <string name="network_is_restored">Network is Restored</string>
     <string name="refresh">Refresh</string>
     <string name="no_internet_connection">No Internet connection</string>
     <string name="check_your_connection">Check your connection, then refresh the page.</string>
+    <string name="no_alarms_yet">No alarms yet</string>
+    <string name="dash">-</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="save">Save</string>
+    <string name="set_alarm">Set Alarm</string>
+    <string name="alarm">Alarm</string>
+    <string name="weather_alert">Weather Alert</string>
+    <string name="weather_is_fine_alert">Weather is fine. no alerts for the schedule time period in %1$s</string>
+    <string name="dismiss">DISMISS</string>
+    <string name="intial_setup">Initial Setup</string>
+    <string name="save_location">Save location</string>
+    <string name="please_choose_loc_first">Please choose location first</string>
+    <string name="The_alarm_may_be_not_work_as_expected">The alarm may be not work as expected, please enable display over other app</string>
+    <string name="unfortunately_the_display_over_other_apps_permission_is_not_granted">Unfortunately the display over other apps permission is not granted so the application might not behave properly</string>
+    <string name="please_allow_draw_over_apps_permission">please allow Draw Over Apps permission to be able to use application properly</string>
+    <string name="permission_request">Permission request</string>
+    <string name="location_request">Location request</string>
+    <string name="warning">Warning</string>
+    <string name="choose_your_current_location">Choose your current location</string>
+    <string name="choose_your_fav_loc">Choose your favorite Location</string>
+    <string name="choose_the_alert_loc">Choose the alert location</string>
+    <string name="assure_deleting">Are you sure you want to delete</string>
+    <string name="please_enable_loc">Please enable location to get correct Results</string>
+    <string name="enable">enable</string>
+    <string name="Unfortunately_the_location_is_disabled">Unfortunately the location is disabled so the application might not behave properly</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="we_can_t_fetch_your_location">We can\'t fetch your location</string>
+    <string name="allow">Allow</string>
+    <string name="please_allow_weather_to_access_your_location">please allow Weather to access your location</string>
 </resources>

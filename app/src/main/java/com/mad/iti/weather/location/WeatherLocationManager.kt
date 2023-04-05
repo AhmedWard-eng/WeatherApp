@@ -7,6 +7,8 @@ import android.location.LocationManager
 import android.os.Looper
 import android.util.Log
 import com.google.android.gms.location.*
+import com.google.android.gms.maps.model.LatLng
+import com.mad.iti.weather.sharedPreferences.SettingSharedPreferences
 import com.mad.iti.weather.utils.locationUtils.LocationStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,12 +33,12 @@ class WeatherLocationManager private constructor(private var application : Appli
     }
 
     @SuppressLint("MissingPermission")
-    override fun requestLocation() {
+    override fun requestLocationByGPS() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
                 p0.lastLocation?.let {
-                  val isEmitted = _location.tryEmit(LocationStatus.Success(it))
+                  val isEmitted = _location.tryEmit(LocationStatus.Success(LatLng(it.latitude,it.longitude)))
                   Log.d(TAG, "onLocationResult: $isEmitted")
                 }
                 removeLocationUpdate()
@@ -45,6 +47,11 @@ class WeatherLocationManager private constructor(private var application : Appli
         mFusedLocationProviderClient.requestLocationUpdates(
             mLocationRequest, locationCallback, Looper.myLooper()
         )
+    }
+
+    override fun requestLocationSavedFromMap(){
+        val isEmitted = _location.tryEmit(LocationStatus.Success(SettingSharedPreferences.getInstance(application).getMapPref()))
+        Log.d(TAG, "onLocationResult: $isEmitted")
     }
 
     override fun removeLocationUpdate() {
