@@ -15,12 +15,14 @@ import android.view.WindowManager.LayoutParams
 import android.widget.Button
 import android.widget.TextView
 import androidx.work.CoroutineWorker
+import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.mad.iti.weather.R
 import com.mad.iti.weather.db.DefaultLocalDataSource
 import com.mad.iti.weather.db.getDatabase
 import com.mad.iti.weather.language.getLanguageLocale
 import com.mad.iti.weather.model.FavAlertsWeatherRepo
+import com.mad.iti.weather.model.entities.AlertEntity
 import com.mad.iti.weather.model.entities.AlertKind
 import com.mad.iti.weather.network.APIClient
 import com.mad.iti.weather.notification.sendNotification
@@ -77,14 +79,15 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters) :
                                         createAlarm(
                                             appContext, appContext.getString(
                                                 R.string.weather_is_fine_alert,
-                                                    formatAddressToCity(it)
-                                                )
+                                                formatAddressToCity(it)
+                                            )
                                         )
 
                                     }
                                     AlertKind.NOTIFICATION -> sendNotification(
                                         appContext,
-                                        appContext.getString(R.string.weather_is_fine_alert,
+                                        appContext.getString(
+                                            R.string.weather_is_fine_alert,
                                             formatAddressToCity(it)
                                         )
                                     )
@@ -93,7 +96,7 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters) :
                             }
 
                         }
-                        repo.removeFromAlerts(alertEntity)
+                        removeFromDataBaseAndDismiss(repo, alertEntity,appContext)
                         Result.success()
                     } else {
                         Result.retry()
@@ -109,6 +112,20 @@ class AlertWorker(appContext: Context, workerParams: WorkerParameters) :
         }
 
 
+    }
+
+    private suspend fun removeFromDataBaseAndDismiss(
+        repo: FavAlertsWeatherRepo,
+        alertEntity: AlertEntity,
+        appContext: Context
+    ) {
+
+        val _Day_TIME_IN_MILLISECOND = 24*60*60*1000L
+        val now = Calendar.getInstance().timeInMillis
+        if((alertEntity.end -  now)  < _Day_TIME_IN_MILLISECOND){
+            WorkManager.getInstance(appContext).cancelAllWorkByTag(alertEntity.id)
+            repo.removeFromAlerts(alertEntity)
+        }
 
     }
 

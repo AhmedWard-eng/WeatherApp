@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -89,7 +90,7 @@ class AlertFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val adapter = AlertsAdapter(AlertsAdapter.RemoveClickListener {
-            WorkManager.getInstance(requireContext()).cancelAllWorkByTag(it.id)
+
             checkDeleteDialog(it)
         })
 
@@ -151,7 +152,10 @@ class AlertFragment : Fragment() {
 
 
         var startTime = Calendar.getInstance().timeInMillis
-        var endTime = Calendar.getInstance().timeInMillis
+        val endCal = Calendar.getInstance()
+        endCal.add(Calendar.DAY_OF_MONTH, 1)
+        var endTime = endCal.timeInMillis
+
         customAlertDialogBinding.buttonSave.setOnClickListener {
             val id = if (customAlertDialogBinding.radioAlarm.isChecked) {
                 saveToDatabase(startTime, endTime, AlertKind.ALARM)
@@ -159,7 +163,7 @@ class AlertFragment : Fragment() {
                 saveToDatabase(startTime, endTime, AlertKind.NOTIFICATION)
             }
 
-            scheduleWork(startTime, id)
+            scheduleWork(startTime, endTime, id)
             checkDisplayOverOtherAppPerm()
             with(Intent(requireContext(), MapsActivity::class.java)) {
                 putExtra(
@@ -174,7 +178,6 @@ class AlertFragment : Fragment() {
         customAlertDialogBinding.cardViewChooseStart.setOnClickListener {
             setAlarm(startTime) { currentTime ->
                 startTime = currentTime
-                endTime = startTime
                 customAlertDialogBinding.textViewStartDate.setDate(currentTime)
                 customAlertDialogBinding.textViewStartTime.setTime(currentTime)
             }
@@ -198,7 +201,9 @@ class AlertFragment : Fragment() {
         return alertEntity.id
     }
 
-    private fun scheduleWork(startTime: Long, tag: String) {
+    private fun scheduleWork(startTime: Long, endTime: Long, tag: String) {
+
+        val _Day_TIME_IN_MILLISECOND = 24 * 60 * 60 * 1000L
         val timeNow = Calendar.getInstance().timeInMillis
 
         val inputData = Data.Builder()
@@ -207,13 +212,33 @@ class AlertFragment : Fragment() {
 
         val constraints =
             Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-        val myWorkRequest: WorkRequest =
+
+        val myWorkRequest: WorkRequest = if ((endTime - startTime) < _Day_TIME_IN_MILLISECOND) {
+            Log.d("TAG", "scheduleWork: one")
             OneTimeWorkRequestBuilder<AlertWorker>().addTag(tag).setInitialDelay(
                 startTime - timeNow, TimeUnit.MILLISECONDS
             ).setInputData(
                 inputData = inputData.build()
             ).setConstraints(constraints).build()
 
+        } else {
+
+            WorkManager.getInstance(requireContext()).enqueue(
+                OneTimeWorkRequestBuilder<AlertWorker>().addTag(tag).setInitialDelay(
+                    startTime - timeNow, TimeUnit.MILLISECONDS
+                ).setInputData(
+                    inputData = inputData.build()
+                ).setConstraints(constraints).build()
+            )
+
+            Log.d("TAG", "scheduleWork: periodic")
+
+            PeriodicWorkRequest.Builder(
+                AlertWorker::class.java, 24L, TimeUnit.HOURS, 1L, TimeUnit.HOURS
+            ).addTag(tag).setInputData(
+                inputData = inputData.build()
+            ).setConstraints(constraints).build()
+        }
         WorkManager.getInstance(requireContext()).enqueue(myWorkRequest)
     }
 
@@ -394,22 +419,22 @@ class AlertFragment : Fragment() {
             ResourcesCompat.getDrawable(
                 resources, R.drawable.dialogue_background, requireActivity().theme
             )
-        ).setTitle(getString(R.string.assure_deleting)).setCancelable(false)
-            .setPositiveButton(
-                getString(R.string.yes)
-            ) { _, _ ->
-                alertViewModel.removeFromAlerts(alertEntity)
-            }.setNegativeButton(
-                getString(R.string.no)
-            ) { _, _ -> }.show()
+        ).setTitle(getString(R.string.assure_deleting)).setCancelable(false).setPositiveButton(
+            getString(R.string.yes)
+        ) { _, _ ->
+            WorkManager.getInstance(requireContext()).cancelAllWorkByTag(alertEntity.id)
+            alertViewModel.removeFromAlerts(alertEntity)
+        }.setNegativeButton(
+            getString(R.string.no)
+        ) { _, _ -> }.show()
     }
 
 
     private fun errorWarningForNotGivingDrawOverAppsPermissions() {
         AlertDialog.Builder(requireActivity()).setTitle(getString(R.string.warning))
             .setCancelable(false).setMessage(
-            getString(R.string.unfortunately_the_display_over_other_apps_permission_is_not_granted)
-        ).setPositiveButton(android.R.string.ok) { _, _ -> }.show()
+                getString(R.string.unfortunately_the_display_over_other_apps_permission_is_not_granted)
+            ).setPositiveButton(android.R.string.ok) { _, _ -> }.show()
     }
 
 
